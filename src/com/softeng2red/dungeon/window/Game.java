@@ -1,5 +1,6 @@
 package com.softeng2red.dungeon.window;
 
+import com.softeng2red.dungeon.framework.GameObject;
 import com.softeng2red.dungeon.framework.KeyInput;
 import com.softeng2red.dungeon.framework.ObjectId;
 import com.softeng2red.dungeon.framework.Texture;
@@ -92,8 +93,14 @@ public class Game extends Canvas implements Runnable {
 
         handler.tick();
         for (int i = 0; i<handler.object.size(); i++){
-            if(handler.object.get(i).getId() == ObjectId.Player){
-                cam.tick(handler.object.get(i));
+            GameObject tempObject = handler.object.get(i);
+            if(tempObject.getId() == ObjectId.Player){
+                cam.tick(tempObject);
+                GameObject healthObject = handler.object.get(0);
+                if (healthObject.healthNum == 0) {
+                    handler.object.clear();
+                    handler.addObject(new Game_Over(tempObject.getX()-((2*WIDTH)/9), tempObject.getY()-HEIGHT/5, ObjectId.Game_Over));
+                }
             }
         }
 
@@ -132,19 +139,19 @@ public class Game extends Canvas implements Runnable {
                  int blue = (pixel) & 0xff;
 
 
-                 //White on paint S, (255,255,255)
+                 //White on paint S, (255,255,255), Standard block
                  if(red == 255 && blue == 255 & green == 255) handler.addObject((new Block(xx*32,yy*32, 0, ObjectId.Block)));
-                 //Blue on paint S (0,0,255)
+                 //Blue on paint S (0,0,255), PLayer
                  if(red == 0 && blue == 255 & green == 0) handler.addObject((new Player(xx*32,yy*32, handler, ObjectId.Player)));
-                 //Green on paint S (0,255,0)
+                 //Green on paint S (0,255,0), Grass Block
                  if(red == 35 && blue == 6 & green == 255) handler.addObject((new Block(xx*32,yy*32, 1, ObjectId.Block)));
-                 //Pink on Paint S (255,0,255)
+                 //Pink on Paint S (255,0,255), Moving block
                  if (red == 251 && blue == 255 & green == 0) handler.addObject((new Moving_Block(xx*32,yy*32, 1, ObjectId.Moving_Block)));
-                 //Red on Paint S (255,0,0)
+                 //Red on Paint S (255,0,0), Villain
                  if (red == 251 && blue == 7 & green == 0) handler.addObject((new Villain(xx*32,yy*32, ObjectId.Villain)));
-                 // Yellow on Paint S (229,229,92)
+                 // Yellow on Paint S (229,229,92), Beer
                  if (red == 229 && blue == 92 & green == 229) handler.addObject((new Beer(xx*32,yy*32, ObjectId.Beer)));
-                 // Brown on Paint S (102,0,0)
+                 // Brown on Paint S (102,0,0), Barrel
                  if (red == 102 && blue == 0 & green == 0) handler.addObject((new Obstacle(xx*32,yy*32, ObjectId.Obstacle)));
 
 
@@ -159,7 +166,9 @@ public class Game extends Canvas implements Runnable {
     }
 
     public static void main(String args[]) {
+
         new Window(960, 800, "A Dungeon Game",  new Game());
+
 
     }
 }
