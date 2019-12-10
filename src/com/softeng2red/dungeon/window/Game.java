@@ -23,14 +23,13 @@ public class Game extends Canvas implements Runnable {
     private HUD hud;
 
     public static boolean isAppear = true;
+    public static boolean isStarting = false;
     private boolean running = false;
     private Thread thread;
     public static int WIDTH, HEIGHT;
-    public static int init_time = 60;
-    public static int time = init_time;
+    public BufferedImage start_menu = null, level = null, city = null;
     public static int count;
     public static int delay;
-    public BufferedImage level0 = null, level = null, city = null;
     public static int LEVEL = 1;
 
 
@@ -43,10 +42,11 @@ public class Game extends Canvas implements Runnable {
         // loading the level
         level = loader.loadImage("/level.png");//Loads the level image
         city = loader.loadImage("/Overground_City_Scene_Big_improved.png");//Loads the background city image
-
+        start_menu = loader.loadImage("/Start_menu.png");
         cam = new Camera(0,0);//Initializes Camera
         handler = new Handler(cam, game_timer);//Initializes Handler
         handler.LoadImageLevel(level);
+        isStarting();
         handler.addObject(new Health(650 ,20, handler,ObjectId.Health));//Initializes health
         game_timer = new Game_Timer(0,0, ObjectId.Game_Timer);//Initializes game timer
 
@@ -63,7 +63,7 @@ public class Game extends Canvas implements Runnable {
             }
         }
         hud = new HUD((Health) healthObject, game_timer, (Finishing_Screen) finishingScreenObject);
-        this.addKeyListener(new KeyInput(handler, this, hud, ObjectId.KeyInput));//Adds key Listener
+        this.addKeyListener(new KeyInput(handler, this, hud));//Adds key Listener
         game_timer.init();
 
     }
@@ -103,8 +103,6 @@ public class Game extends Canvas implements Runnable {
             frames++;
 
             if ((System.currentTimeMillis() - timer) > 1000) {
-//                if (time >= 0)
-//                    time--;
                 timer += 1000;
                 System.out.println("FPS: " + frames + "  TICKS: " + updates);
                 frames = 0;
@@ -141,6 +139,14 @@ public class Game extends Canvas implements Runnable {
             GameOver();
     }
 
+    //Function which is called when game begins
+    public void isStarting() {
+        isStarting = true;
+        handler.clearLevel();
+        handler.addObject(new Start_Screen(0,0, ObjectId.Start_Screen));
+
+    }
+
     //Function which is called when player dies
     public void GameOver() {
         for (int i = 0; i < handler.object.size(); i++){
@@ -175,20 +181,12 @@ public class Game extends Canvas implements Runnable {
         handler.render(g);//Draws all the objects
 
         g2d.translate(-cam.getX(),-cam.getY());//Adjusts camera so is aligned with player
-        hud.draw((Graphics2D) g);//Draws the heads up display
+        hud.draw(g2d);//Draws the heads up display
 
         /******************/
         g.dispose();
         bs.show();
 
-    }
-
-    public static int getTime() {
-        return time;
-    }
-
-    public static void setTime(int new_time) {
-        time = new_time;
     }
 
     public static Texture getInstance(){

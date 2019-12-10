@@ -1,5 +1,7 @@
 package com.softeng2red.dungeon.objects;
 
+import com.softeng2red.dungeon.framework.GameObject;
+import com.softeng2red.dungeon.framework.ObjectId;
 import com.softeng2red.dungeon.framework.Texture;
 import com.softeng2red.dungeon.window.Game;
 import com.softeng2red.dungeon.window.Handler;
@@ -11,11 +13,10 @@ import java.awt.*;
 //This shows the health and the time
 public class HUD {
 
-    Handler handler;
     Game_Timer timer;
     private Health healthObject;
     private Font font;
-    private Finishing_Screen finishingScreen;
+    Finishing_Screen finishingScreen;
     private boolean running = true;
     Texture tex = Game.getInstance();
 
@@ -37,7 +38,7 @@ public class HUD {
 
     public void draw(Graphics2D g){
 
-        if(running) {
+        if(running && !Game.isStarting) {
 
             // Varies the size of the spotlight dependant on how much beer has been collected
             if (healthObject.beerNum == 1) g.drawImage(tex.spotlight[3], 0,0, Game.WIDTH + 20,Game.HEIGHT + 20, null);
@@ -63,6 +64,7 @@ public class HUD {
 
     public void init() {
         running = true;
+        healthObject.healthNum = GameObject.init_health;
     }
 
 
