@@ -3,6 +3,8 @@
 ### INTRO
 This is a github repo for the coursework.
 
+The final jar file is in the path"/out/artifacts/DungeonGameV2_jar?/Minor Adventures.jar"
+
 ### UPDATES
 - 06/11/19 <br>
     Updates the basic source code <br>
@@ -72,4 +74,6 @@ This is a github repo for the coursework.
     - Completes the connection of start menu with other levels
     - Fixes the bug of timer <br>
     by: Corey
-    
+- 11/12/19 <br>
+    Completes some details and test all the levels to make them work successfully <br>
+    by: Angus & Corey & Matt
