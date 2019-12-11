@@ -13,7 +13,7 @@ public class Handler {
 
     public LinkedList<GameObject> object = new LinkedList<GameObject>();
     private GameObject tempObject;
-    private BufferedImage level, level0;
+    private BufferedImage level0, level, level2, level3;
     public Camera cam;
     public Game_Timer timer;
 
@@ -23,8 +23,10 @@ public class Handler {
 
         BufferedImageLoader loader = new BufferedImageLoader();
         // loading the level
-        level = loader.loadImage("/level.png");//Loads the level image
-//        level0 = loader.loadImage("/GameOverLevel.png");// Loads the Game Over image
+        level0 = loader.loadImage("/levelblack.png");
+        level = loader.loadImage("/level1.png");//Loads the level image
+        level2 = loader.loadImage("/level2.png");//Loads the level image
+        level3 = loader.loadImage("/level3.png");//Loads the level image
 
     }
 
@@ -34,7 +36,7 @@ public class Handler {
             tempObject.tick(object);//Calls the tick function on all objects
         }
     }
-//Renders all objects
+    //Renders all objects
     public void render(Graphics g) {
 
         for (int i = 0; i < object.size(); i++) {
@@ -77,29 +79,45 @@ public class Handler {
                 // Paint S (144,144,144), Disappearing Blocks
                 if (red ==  144 && blue == 144 & green == 144) addObject((new Disappearing_Block(xx*32,yy*32, ObjectId.Disappearing_Block)));
                 //Bouncer, orange on paint s
-                if (red == 252 && blue == 8 && green == 119) addObject((new Bouncer(xx*32, yy*32, ObjectId.Bouncer)));
+                if (red == 252 && blue == 8 && green == 119) addObject((new Bouncer(xx*32 - 500, yy*32 - 100, ObjectId.Bouncer)));
                 // Paint S (200, 200, 200), Finishing Screen
-                if (red ==  188 && blue == 188 & green == 188) addObject((new Finishing_Screen(xx*32,yy*32, ObjectId.Finishing_Screen)));
+                if (red ==  188 && blue == 188 & green == 188) addObject((new Key(xx*32,yy*32, ObjectId.Key)));
 
             }
         }
-
-
     }
 
-
+    // Function to switch different levels
     public void switchLevel() {
         clearLevel();
-        cam.setX(0);
+        System.out.println("Switching the level...");
         switch (Game.LEVEL) {
+            case -1:
+                LoadImageLevel(level0);
+                addObject(new Start_Screen(0,0,ObjectId.Start_Screen));
+                Game.isStarting = true;
+                Game.isFinished = false;
+                System.out.println("Have switched to the start menu.");
+                break;
             case 0:
                 LoadImageLevel(level);
+                System.out.println("Have switched to the level 1.");
+                break;
+            case 1:
+                LoadImageLevel(level2);
+                System.out.println("Have switched to the level 2.");
+                break;
+            case 2:
+                LoadImageLevel(level3);
+                System.out.println("Have switched to the level 3.");
                 break;
         }
         Game.LEVEL++;
     }
 
     public void clearLevel() {
+        cam.setX(0);
+        cam.setY(0);
         object.clear();
     }
 

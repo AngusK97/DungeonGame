@@ -11,9 +11,9 @@ import java.util.TimerTask;
 
 public class Game_Timer extends GameObject {
 
-    Texture tex;
     Timer timer = new Timer();
     public int time;
+    private int runtime = 1;
     private boolean running = false;
 
     public Game_Timer(float x, float y, ObjectId id) {
@@ -27,13 +27,17 @@ public class Game_Timer extends GameObject {
 
     public void start() {
         running = true;
-        timer.schedule(new TimerTask() {
-            public void run() {
-                if (time > 0) {
-                    time--;
+        if (runtime == 1) {
+            runtime++;
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    if (time > 0 && running) {
+                        time--;
+                    }
                     System.out.println("Time: " + time);
-                }
-            }}, 500L, 1000L);
+                }}, 500L, 1000L
+            );
+        }
     }
 
     public int getTime() {

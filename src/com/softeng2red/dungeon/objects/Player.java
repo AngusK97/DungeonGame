@@ -124,9 +124,14 @@ public class Player extends GameObject {
             }
 
             if (tempObject.getId() == ObjectId.Game_Timer) {
+                // bottom
+                if (getBounds().intersects(tempObject.getBounds())) {
+                    Game.game_timer.start();
+                    handler.object.remove(tempObject);
+                }
                 // top
                 if (getBoundsTop().intersects(tempObject.getBounds())) {
-                    Game.game_timer.start();
+                    Game.game_timer.stop();
                     handler.object.remove(tempObject);
                 }
             }
@@ -157,33 +162,15 @@ public class Player extends GameObject {
 
             if (tempObject.getId() == ObjectId.Player) {
 
-                //System.out.print(i);
-
             }
 
             // Detecting collisions with finishing_screen
-            if (tempObject.getId() == ObjectId.Finishing_Screen) {
+            if (tempObject.getId() == ObjectId.Key) {
                 // top
-                if (getBoundsTop().intersects(tempObject.getBounds())) {
-                    tempObject.isFinished = true;
-                }
-                // bottom
-                if (getBounds().intersects(tempObject.getBounds())) {
-                    if (getBoundsTop().intersects(tempObject.getBounds())) {
-                        tempObject.isFinished = true;
-                    }
-                }
-                // right
-                if (getBoundsRight().intersects(tempObject.getBounds())) {
-                    if (getBoundsTop().intersects(tempObject.getBounds())) {
-                        tempObject.isFinished = true;
-                    }
-                }
-                // left
-                if (getBoundsLeft().intersects(tempObject.getBounds())) {
-                    if (getBoundsTop().intersects(tempObject.getBounds())) {
-                        tempObject.isFinished = true;
-                    }
+                if (getBounds().intersects(tempObject.getBounds()) || getBoundsTop().intersects(tempObject.getBounds()) || getBoundsLeft().intersects(tempObject.getBounds()) || getBoundsRight().intersects(tempObject.getBounds())) {
+                    Game.GameFinish();
+                    handler.clearLevel();
+                    handler.addObject(new Finishing_Screen(0,0, ObjectId.Finishing_Screen));
                 }
             }
 
@@ -250,11 +237,11 @@ public class Player extends GameObject {
             }
             // Detecting collisions with Obstacles
             if (tempObject.getId() == ObjectId.Bouncer) {
-                float y_diff = y - tempObject.getY();
-                float x_diff = x - tempObject.getX();
+                float y_diff = y - (tempObject.getY() + 200);
+                float x_diff = x - (tempObject.getX() + 400);
                 float dist = ((y_diff)*(y_diff) + (x_diff)*(x_diff));
 
-                if (dist>10000){
+                if (dist>14000){
                     tempObject.img_type = 0;
                 }else{
                     tempObject.img_type = 1;
